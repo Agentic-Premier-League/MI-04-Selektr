@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
+import { AlertTriangle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -206,7 +207,7 @@ function ResumePanel({
                 className="rounded-btn border border-signal/20 bg-[#FEF3F0] px-5 py-3"
               >
                 <div className="flex items-start gap-2">
-                  <span className="mt-0.5 text-signal">⚠</span>
+                  <AlertTriangle className="h-4 w-4 mt-0.5 text-signal" />
                   <p className="text-[14px] font-medium text-ink">{flag.description}</p>
                 </div>
                 <p className="mt-1 ml-6 text-[12px] uppercase tracking-eyebrow text-slate">
@@ -417,7 +418,7 @@ function ActionsPanel({
             disabled={emailLoading !== null}
             onClick={() => generateEmail("invite")}
           >
-            {emailLoading === "invite" ? "Drafting..." : "✉ Draft Invite"}
+            {emailLoading === "invite" ? "Drafting..." : <><Mail className="h-4 w-4 mr-2 inline" /> Draft Invite</>}
           </Button>
           <Button
             variant="secondary"
@@ -425,7 +426,7 @@ function ActionsPanel({
             disabled={emailLoading !== null}
             onClick={() => generateEmail("waitlist")}
           >
-            {emailLoading === "waitlist" ? "Drafting..." : "✉ Draft Waitlist"}
+            {emailLoading === "waitlist" ? "Drafting..." : <><Mail className="h-4 w-4 mr-2 inline" /> Draft Waitlist</>}
           </Button>
           <Button
             variant="clay"
@@ -433,7 +434,7 @@ function ActionsPanel({
             disabled={emailLoading !== null}
             onClick={() => generateEmail("reject")}
           >
-            {emailLoading === "reject" ? "Drafting..." : "✉ Draft Reject"}
+            {emailLoading === "reject" ? "Drafting..." : <><Mail className="h-4 w-4 mr-2 inline" /> Draft Reject</>}
           </Button>
         </div>
 

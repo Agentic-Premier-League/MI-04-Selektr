@@ -74,7 +74,7 @@ export default function RecruiterLayout({
           <EyebrowLabel>Recruiter access</EyebrowLabel>
           <h2 className="mt-4">Enter access password</h2>
           <p className="mt-3 text-slate">
-            HireIQ recruiter pages are gated. Ask your admin for the shared password.
+            Selektr recruiter pages are gated. Ask your admin for the shared password.
           </p>
           <div className="mt-8">
             <PillInput

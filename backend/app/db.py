@@ -4,7 +4,7 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/hireiq.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/Selektr.db")
 
 if DATABASE_URL.startswith("sqlite:///./"):
     Path("data").mkdir(exist_ok=True)

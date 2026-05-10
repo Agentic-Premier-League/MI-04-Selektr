@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { ArrowRight } from "lucide-react";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
 import { OrbitalArc } from "@/components/ui/OrbitalArc";
 import { FloatingNavPill } from "@/components/nav/FloatingNavPill";
@@ -67,7 +68,7 @@ function DoneContent() {
             </button>
           ) : (
             <Link href="/jobs">
-              <Button variant="secondary" rightIcon={<span>→</span>}>
+              <Button variant="secondary" rightIcon={<ArrowRight className="h-4 w-4" />}>
                 Browse More Roles
               </Button>
             </Link>

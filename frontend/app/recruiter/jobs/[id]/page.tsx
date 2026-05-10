@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
+import { MapPin, Clock, AlertTriangle, ArrowRight, Copy } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
 import { PillInput } from "@/components/ui/PillInput";
@@ -142,13 +143,13 @@ export default function JobPipelinePage() {
           </div>
           <h1 className="mt-4">{job.title}</h1>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-[14px] text-slate">
-            <span>📍 {job.location}</span>
+            <span className="flex items-center"><MapPin className="h-4 w-4 mr-1" /> {job.location}</span>
             <span>·</span>
-            <span>⏱ {job.employment_type}</span>
+            <span className="flex items-center"><Clock className="h-4 w-4 mr-1" /> {job.employment_type}</span>
             {job.deadline && (
               <>
                 <span>·</span>
-                <span>⌛ Closes {job.deadline}</span>
+                <span className="flex items-center"><Clock className="h-4 w-4 mr-1" /> Closes {job.deadline}</span>
               </>
             )}
           </div>
@@ -301,11 +302,11 @@ function CandidateRowCard({
           </span>
         </div>
         {candidate.red_flags.length > 0 && (
-          <Badge tone="warning">⚠ {candidate.red_flags.length} flags</Badge>
+          <Badge tone="warning"><AlertTriangle className="h-3 w-3 mr-1 inline" /> {candidate.red_flags.length} flags</Badge>
         )}
         <Badge tone={candidate.status}>{candidate.status}</Badge>
         <div className="ml-auto inline-flex h-12 w-12 items-center justify-center rounded-full border border-ink bg-white transition-transform group-hover:translate-x-1">
-          →
+          <ArrowRight className="h-5 w-5" />
         </div>
       </article>
     </Link>
@@ -322,7 +323,7 @@ function ShareableLink({ url }: { url: string }) {
         className="flex-shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink text-cream"
         aria-label="Copy link"
       >
-        ⧉
+        <Copy className="h-3 w-3" />
       </button>
     </div>
   );

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
-import { GhostWatermark } from "@/components/ui/GhostWatermark";
 import { PillInput } from "@/components/ui/PillInput";
 import { PillToggleGroup } from "@/components/ui/PillToggleGroup";
 import { TagInput } from "@/components/ui/TagInput";
@@ -114,7 +113,6 @@ export default function CreateJobPage() {
       <FloatingNavPill variant="recruiter" rightSlot={<Avatar />} />
 
       <section className="relative overflow-hidden px-6 pt-16 md:px-12">
-        <GhostWatermark text="POST" align="left" />
         <div className="relative z-10 mx-auto max-w-[1280px] py-12 md:py-16">
           <Link href="/recruiter" className="text-[14px] text-slate hover:text-ink">
             ← Dashboard
@@ -274,7 +272,7 @@ export default function CreateJobPage() {
               <>
                 <SectionHeader eyebrow="Shareable link" className="mt-12" />
                 <div className="flex items-center gap-3 rounded-pill border border-ink/40 bg-white px-5 py-3 text-[14px]">
-                  <span className="text-slate">hireiq.app/jobs/</span>
+                  <span className="text-slate">Selektr.app/jobs/</span>
                   <span className="flex-1 truncate text-ink">{slugPreview}</span>
                   <span className="rounded-pill bg-ink px-3 py-1 text-[12px] text-cream">
                     Preview
@@ -349,7 +347,7 @@ function VisibilityToggle({
       <Option
         active={value === "public"}
         title="Public"
-        body="Listed on the HireIQ job board. Anyone with the link can apply."
+        body="Listed on the Selektr job board. Anyone with the link can apply."
         onClick={() => onChange("public")}
       />
       <Option

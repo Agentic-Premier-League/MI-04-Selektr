@@ -1,12 +1,12 @@
 services:
   backend:
     build: ./backend
-    container_name: hireiq-backend
+    container_name: Selektr-backend
     env_file: ./backend/.env
     environment:
-      DATABASE_URL: sqlite:////app/data/hireiq.db
+      DATABASE_URL: sqlite:////app/data/Selektr.db
     volumes:
-      - hireiq_data:/app/data
+      - Selektr_data:/app/data
     ports:
       - "8000:8000"
     healthcheck:
@@ -20,7 +20,7 @@ services:
       context: ./frontend
       args:
         NEXT_PUBLIC_API_BASE: http://backend:8000
-    container_name: hireiq-frontend
+    container_name: Selektr-frontend
     environment:
       NEXT_PUBLIC_API_BASE: http://backend:8000
     ports:
@@ -30,4 +30,4 @@ services:
         condition: service_healthy
 
 volumes:
-  hireiq_data:
+  Selektr_data:

@@ -13,10 +13,16 @@ load_dotenv()
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
+    try:
+        from seed import seed
+        seed()
+        print("Database seeding check completed.")
+    except Exception as e:
+        print(f"Error during database seeding: {e}")
     yield
 
 
-app = FastAPI(title="HireIQ API", lifespan=lifespan)
+app = FastAPI(title="Selektr API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
-import { GhostWatermark } from "@/components/ui/GhostWatermark";
+import { MapPin, Clock, BarChart, ArrowRight } from "lucide-react";
 import { FloatingNavPill } from "@/components/nav/FloatingNavPill";
 import { fetchJobBySlug } from "@/lib/api";
 import type { Job } from "@/lib/types";
@@ -60,7 +60,6 @@ export default function JobDetailPage() {
       <FloatingNavPill variant="applicant" />
 
       <section className="relative overflow-hidden px-6 pt-16 md:px-12">
-        <GhostWatermark text={job.department.toUpperCase()} align="left" />
         <div className="relative z-10 mx-auto max-w-[1280px] py-12 md:py-16">
           {isPublic && (
             <Link href="/jobs" className="text-[14px] text-slate hover:text-ink">
@@ -73,15 +72,15 @@ export default function JobDetailPage() {
           <h1 className="mt-6 max-w-3xl">{job.title}</h1>
 
           <div className="mt-6 flex flex-wrap gap-3 text-[14px] text-slate">
-            <Pill>📍 {job.location}</Pill>
-            <Pill>⏱ {job.employment_type}</Pill>
-            <Pill>📊 {job.experience_level}</Pill>
-            {job.deadline && <Pill>⌛ {job.deadline}</Pill>}
+            <Pill><MapPin className="h-4 w-4 mr-1 inline" /> {job.location}</Pill>
+            <Pill><Clock className="h-4 w-4 mr-1 inline" /> {job.employment_type}</Pill>
+            <Pill><BarChart className="h-4 w-4 mr-1 inline" /> {job.experience_level}</Pill>
+            {job.deadline && <Pill><Clock className="h-4 w-4 mr-1 inline" /> {job.deadline}</Pill>}
           </div>
 
           <div className="mt-10">
             <Link href={`/apply/${job.slug}`}>
-              <Button variant="primary" size="lg" rightIcon={<span>→</span>}>
+              <Button variant="primary" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
                 Apply Now
               </Button>
             </Link>
@@ -92,7 +91,7 @@ export default function JobDetailPage() {
       <section className="px-6 md:px-12">
         <div className="mx-auto max-w-[720px] py-12 md:py-16">
           <Section eyebrow="The role" title="About this role">
-            <p className="whitespace-pre-line text-[16px] font-[450] leading-[1.6]">
+            <p className="whitespace-pre-line text-base font-[450] leading-relaxed">
               {job.description}
             </p>
           </Section>
@@ -135,7 +134,7 @@ export default function JobDetailPage() {
 
           {job.deadline && (
             <Section eyebrow="Deadline" title="Apply by">
-              <p className="text-[16px] font-medium">{job.deadline}</p>
+              <p className="text-base font-medium">{job.deadline}</p>
             </Section>
           )}
         </div>
@@ -143,7 +142,7 @@ export default function JobDetailPage() {
 
       {/* Sticky mobile apply bar */}
       <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between gap-3 border-t border-ink/10 bg-white px-6 py-3 md:hidden">
-        <h3 className="truncate text-[18px] font-medium tracking-tight-2">{job.title}</h3>
+        <h3 className="truncate text-lg font-medium tracking-tight-2">{job.title}</h3>
         <Link href={`/apply/${job.slug}`}>
           <Button variant="primary" size="sm">
             Apply
@@ -166,7 +165,7 @@ function Section({
   return (
     <div className="border-t border-ink/10 py-10 first:border-t-0 first:pt-0">
       <EyebrowLabel>{eyebrow}</EyebrowLabel>
-      <h2 className="mt-4 text-[28px]">{title}</h2>
+      <h2 className="mt-4 text-3xl">{title}</h2>
       <div className="mt-6">{children}</div>
     </div>
   );

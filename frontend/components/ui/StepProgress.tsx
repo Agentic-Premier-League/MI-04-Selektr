@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { Check } from "lucide-react";
 
 export interface StepProgressProps {
   step: 1 | 2;
@@ -27,8 +28,8 @@ export function StepProgress({
             )}
           >
             {isComplete && (
-              <span aria-hidden className="text-arc">
-                ✓
+              <span aria-hidden className="text-arc flex items-center">
+                <Check className="h-4 w-4" />
               </span>
             )}
             {labels[s - 1]}

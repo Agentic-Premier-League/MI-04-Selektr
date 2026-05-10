@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
-import { GhostWatermark } from "@/components/ui/GhostWatermark";
+import { Check, Clock, Sparkles, FileText } from "lucide-react";
 import { LoadingArc } from "@/components/ui/LoadingArc";
 import { PillInput } from "@/components/ui/PillInput";
 import { PillToggleGroup } from "@/components/ui/PillToggleGroup";
@@ -163,7 +163,6 @@ export default function ApplicationFormPage() {
       <FloatingNavPill variant="applicant" />
 
       <section className="relative overflow-hidden px-6 pt-16 md:px-12">
-        <GhostWatermark text="APPLY" align="left" />
         <div className="relative z-10 mx-auto max-w-[1280px] py-12 md:py-16">
           <EyebrowLabel>{job.title}</EyebrowLabel>
           <h1 className="mt-6">Your application</h1>
@@ -359,7 +358,7 @@ function Step1({
               checked={profile.consent_privacy}
               onChange={(v) => set("consent_privacy", v)}
             >
-              I agree to HireIQ&apos;s{" "}
+              I agree to Selektr&apos;s{" "}
               <span className="text-link underline">privacy policy</span> and consent to AI
               processing of my application.
             </Checkbox>
@@ -421,7 +420,7 @@ function Step2({
           </p>
 
           <div className="mt-4 inline-flex items-center gap-2 rounded-pill bg-white px-5 py-1.5 text-[14px] text-slate">
-            ⏱ No time limit
+            <Clock className="h-4 w-4 inline" /> No time limit
           </div>
 
           <div className="mt-8 divide-y divide-ink/10">
@@ -498,7 +497,7 @@ function LoadingScreen() {
         <div className="flex flex-col items-center gap-6 rounded-card bg-lifted p-16 text-center shadow-card">
           <LoadingArc size={80} />
           <div>
-            <h3 className="text-[20px]">✦ Generating your personalized questions...</h3>
+            <h3 className="text-[20px] flex items-center justify-center"><Sparkles className="h-5 w-5 mr-2" /> Generating your personalized questions...</h3>
             <p className="mt-3 text-slate">
               We&apos;re crafting questions based on your resume and this role.
             </p>
@@ -559,7 +558,7 @@ function Checkbox({
           checked ? "bg-ink text-cream" : "bg-white",
         )}
       >
-        {checked && <span aria-hidden>✓</span>}
+        {checked && <Check className="h-4 w-4" />}
       </span>
       <input
         type="checkbox"
@@ -603,8 +602,8 @@ function PdfDropzone({
       {file ? (
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 text-left">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-ink text-cream text-[18px]">
-              📄
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-ink text-cream">
+              <FileText className="h-6 w-6" />
             </span>
             <div>
               <div className="text-[16px] font-medium text-ink">{file.name}</div>

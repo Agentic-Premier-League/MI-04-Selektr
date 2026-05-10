@@ -1,4 +1,4 @@
-const KEY = "hireiq.recruiterPassword";
+const KEY = "Selektr.recruiterPassword";
 
 export function getRecruiterPassword(): string | null {
   if (typeof window === "undefined") return null;

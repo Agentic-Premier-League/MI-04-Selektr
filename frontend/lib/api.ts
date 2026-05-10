@@ -12,7 +12,10 @@ import type {
   CandidateStatus,
 } from "./types";
 
-const BASE = "/api";
+// Next.js rewrites have a known bug with multipart/form-data (file uploads) causing ECONNRESET.
+// Since the backend has CORS enabled, we bypass the proxy and hit the backend directly.
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+const BASE = `${API_BASE}/api`;
 
 class ApiError extends Error {
   status: number;

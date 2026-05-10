@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
-import { GhostWatermark } from "@/components/ui/GhostWatermark";
+import { MapPin, ArrowRight, Copy, AlertTriangle } from "lucide-react";
 import { OrbitalArc } from "@/components/ui/OrbitalArc";
 import { FloatingNavPill } from "@/components/nav/FloatingNavPill";
 import { fetchAllJobs } from "@/lib/api";
@@ -42,7 +42,6 @@ export default function RecruiterDashboardPage() {
       <FloatingNavPill variant="recruiter" rightSlot={<RecruiterAvatar />} />
 
       <section className="relative overflow-hidden px-6 pt-16 md:px-12">
-        <GhostWatermark text="RECRUIT" align="left" />
         <div className="relative z-10 mx-auto flex max-w-[1280px] flex-col gap-8 py-12 md:flex-row md:items-end md:justify-between md:py-16">
           <div>
             <EyebrowLabel>Overview</EyebrowLabel>
@@ -61,7 +60,7 @@ export default function RecruiterDashboardPage() {
 
       <section className="px-6 md:px-12">
         <div className="mx-auto max-w-[1280px]">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard label="Open Positions" value={stats?.open ?? 0} loading={!jobs} />
             <StatCard
               label="Total Applications"
@@ -77,7 +76,7 @@ export default function RecruiterDashboardPage() {
             <StatCard
               label="Red Flags Detected"
               value={stats?.redFlags ?? 0}
-              icon="⚠"
+              icon={<AlertTriangle className="h-6 w-6" />}
               loading={!jobs}
             />
           </div>
@@ -136,15 +135,15 @@ function StatCard({
   label: string;
   value: number;
   suffix?: string;
-  icon?: string;
+  icon?: React.ReactNode;
   loading?: boolean;
 }) {
   return (
     <div className="rounded-card bg-lifted p-8 shadow-card">
       <EyebrowLabel>{label}</EyebrowLabel>
-      <div className="mt-6 flex items-baseline gap-2">
-        {icon && value > 0 && <span className="text-[24px] text-signal">{icon}</span>}
-        <span className="text-[44px] font-medium tracking-tight-2 text-ink">
+      <div className="mt-6 flex items-center gap-2">
+        {icon && value > 0 && <span className="text-signal flex items-center">{icon}</span>}
+        <span className="text-3xl md:text-5xl font-medium tracking-tight-2 text-ink">
           {loading ? "—" : value}
         </span>
         {suffix && <span className="text-[16px] text-slate">{suffix}</span>}
@@ -176,7 +175,7 @@ function JobCard({ job }: { job: Job }) {
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-arc" />
           {job.department}
         </div>
-        <p className="mt-1 text-[14px] text-slate">📍 {job.location}</p>
+        <p className="mt-1 flex items-center text-[14px] text-slate"><MapPin className="h-4 w-4 mr-1 inline" /> {job.location}</p>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-[14px]">
@@ -200,7 +199,7 @@ function JobCard({ job }: { job: Job }) {
 
       <div className="flex flex-wrap items-center gap-3 pt-2">
         <Link href={`/recruiter/jobs/${job.id}`} className="flex-1 min-w-[160px]">
-          <Button variant="primary" fullWidth rightIcon={<span>→</span>}>
+          <Button variant="primary" fullWidth rightIcon={<ArrowRight className="h-4 w-4" />}>
             View Pipeline
           </Button>
         </Link>
@@ -219,7 +218,7 @@ function ShareableLink({ url }: { url: string }) {
         className="flex-shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink text-cream"
         aria-label="Copy link"
       >
-        ⧉
+        <Copy className="h-3 w-3" />
       </button>
     </div>
   );

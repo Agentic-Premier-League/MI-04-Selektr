@@ -1,4 +1,4 @@
-# HireIQ — Full App Description
+# Selektr — Full App Description
 ### AI Hiring Platform · Next.js + FastAPI · Mastercard Design System
 
 ---
@@ -37,7 +37,7 @@ All surfaces and components follow the Mastercard design system strictly.
 ## 1. App Structure
 
 ```
-HireIQ
+Selektr
 ├── Recruiter Side
 │   ├── /recruiter               → Dashboard (jobs list + analytics strip)
 │   ├── /recruiter/jobs/new      → Create Job Posting
@@ -57,14 +57,14 @@ HireIQ
 
 ### Floating Nav Pill
 - **Container:** White `#FFFFFF`, `border-radius: 999px`, shadow `rgba(0,0,0,0.04) 0 4px 24px`, positioned 24px below viewport top, centered, `max-width: 1280px`, `padding: 16px 40px`
-- **Left:** HireIQ wordmark — Sofia Sans, 20px, weight 700, Ink Black. Paired with a small two-circle logomark (ink + arc orange)
+- **Left:** Selektr wordmark — Sofia Sans, 20px, weight 700, Ink Black. Paired with a small two-circle logomark (ink + arc orange)
 - **Center links (Recruiter nav):** "Dashboard" · "Jobs" · "Analytics" — 16px / weight 500 / ink, 48px gap
 - **Center links (Applicant nav):** "Browse Jobs" — single centered link
 - **Right (Recruiter):** Circular avatar button 40px, initials fallback, Ink Black border 1px
 - **Right (Applicant):** 40px circular search icon button (Ink Black border 1px)
 
 ### Mobile Nav
-- Same pill shape, collapsed: HireIQ wordmark + hamburger (48×48px) + search icon
+- Same pill shape, collapsed: Selektr wordmark + hamburger (48×48px) + search icon
 - Hamburger opens full-screen cream overlay with stacked links
 
 ---
@@ -198,7 +198,7 @@ Section body: "Control who can find and apply to this role."
 Large toggle card — `border-radius: 40px`, `padding: 32px`, lifted cream bg:
 
 ```
-[ ◉ PUBLIC  ]   Listed on the HireIQ job board.
+[ ◉ PUBLIC  ]   Listed on the Selektr job board.
                 Anyone with the link can apply.
 
 [ ○ PRIVATE ]   Not listed on the job board.
@@ -213,7 +213,7 @@ Appears after Job Title is filled (auto-generated slug):
 ```
 Your job link will be:
 ┌─────────────────────────────────────────── [Copy] ─┐
-│  hireiq.app/jobs/senior-frontend-engineer-3k2x     │
+│  Selektr.app/jobs/senior-frontend-engineer-3k2x     │
 └────────────────────────────────────────────────────┘
 ```
 Pill container: `border-radius: 999px`, outlined ink border, slate text, copy = 32px circular Ink Black button with copy icon
@@ -543,7 +543,7 @@ Character count indicator below textarea: "1,240 characters · Looks good ✓" �
 **Section D — Consent**
 Checkbox row (custom styled, not a pill):
 - `☐ I confirm this is my own work and the information provided is accurate.` — 14px / weight 450 / ink
-- `☐ I agree to HireIQ's privacy policy and consent to AI processing of my application.` — 14px / weight 450 / ink; "privacy policy" = link blue `#3860BE`
+- `☐ I agree to Selektr's privacy policy and consent to AI processing of my application.` — 14px / weight 450 / ink; "privacy policy" = link blue `#3860BE`
 
 Note: "Your application is processed by AI. No humans will see your details until you pass initial screening." — 12px / slate
 
@@ -675,4 +675,4 @@ GET    /api/jobs/{id}/analytics         → score distribution + funnel data
 
 ---
 
-*HireIQ — built for the 2-hour sprint. Scope to win.*
+*Selektr — built for the 2-hour sprint. Scope to win.*

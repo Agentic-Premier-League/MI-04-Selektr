@@ -1,8 +1,7 @@
-import type { NextConfig } from "next";
-
+/** @type {import('next').NextConfig} */
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
-const config: NextConfig = {
+const nextConfig = {
   async rewrites() {
     return [
       {
@@ -13,4 +12,4 @@ const config: NextConfig = {
   },
 };
 
-export default config;
+export default nextConfig;

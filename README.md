@@ -1,11 +1,11 @@
-# HireIQ
+# Selektr
 
 AI hiring platform: recruiters post jobs, applicants apply with a resume + AI-generated interview questions, candidates are screened and ranked by AI.
 
 - **Frontend:** Next.js (App Router) + TypeScript + Tailwind, Mastercard-inspired design
 - **Backend:** FastAPI + SQLAlchemy + SQLite
 - **AI:** Google Gemini 2.5 Flash (`google-generativeai`)
-- **Docs:** [`DESIGN.md`](./DESIGN.md), [`hireiq-description.md`](./hireiq-description.md)
+- **Docs:** [`DESIGN.md`](./DESIGN.md), [`selektr-description.md`](./selektr-description.md)
 
 ---
 
@@ -22,7 +22,7 @@ Then open:
 
 - Frontend: http://localhost:3000
 - Backend API docs: http://localhost:8000/docs
-- SQLite DB lives in the `hireiq_data` Docker volume — survives restarts.
+- SQLite DB lives in the `selektr_data` Docker volume — survives restarts.
 
 To wipe data:
 
@@ -93,7 +93,7 @@ backend/
 │   ├── gemini.py                   5 prompt fns: screen / generate Qs / score / draft email
 │   ├── pdf.py                      pdfplumber-based resume PDF text extraction
 │   └── ...
-└── data/hireiq.db                  SQLite database (volume-mounted in Docker)
+└── data/selektr.db                  SQLite database (volume-mounted in Docker)
 ```
 
 The five Claude/Gemini calls in spec section 6 are all wired to Gemini 2.5 Flash with JSON-mode output and a degraded-fallback path so the app never hard-fails when the model is unreachable or returns malformed JSON.

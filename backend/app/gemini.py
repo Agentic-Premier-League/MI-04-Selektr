@@ -284,7 +284,7 @@ AI summary: {summary}
 Return JSON:
 {{ "subject": "...", "body": "..." }}
 
-Email body should be 3-5 short paragraphs, signed "The {department} Team at HireIQ".
+Email body should be 3-5 short paragraphs, signed "The {department} Team at Selektr".
 Do not include greeting markers like "Dear" if the candidate name is missing.
 """
 
@@ -317,9 +317,9 @@ def _degraded_email(candidate: Any, job: Any, email_type: str) -> dict[str, str]
         "subject": subject_map.get(email_type, f"Update on your {job.title} application"),
         "body": (
             f"Hi {candidate.full_name},\n\n"
-            f"Thanks for applying to the {job.title} role at HireIQ. "
+            f"Thanks for applying to the {job.title} role at Selektr. "
             f"A recruiter will follow up shortly with next steps.\n\n"
-            f"Best,\nThe {job.department} Team at HireIQ"
+            f"Best,\nThe {job.department} Team at Selektr"
         ),
     }
 

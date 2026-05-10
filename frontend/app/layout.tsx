@@ -10,7 +10,7 @@ const sofia = Sofia_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "HireIQ — AI Hiring Platform",
+  title: "Selektr — AI Hiring Platform",
   description:
     "AI-screened candidates, ranked and ready. Post a job, get an editorial-grade hiring pipeline.",
 };

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
-import { GhostWatermark } from "@/components/ui/GhostWatermark";
+import { MapPin, Clock, ArrowRight } from "lucide-react";
 import { OrbitalArc } from "@/components/ui/OrbitalArc";
 import { PillInput } from "@/components/ui/PillInput";
 import { PillToggleGroup } from "@/components/ui/PillToggleGroup";
@@ -64,7 +64,6 @@ export default function PublicJobBoardPage() {
       <FloatingNavPill variant="applicant" />
 
       <section className="relative overflow-hidden px-6 pt-20 md:px-12">
-        <GhostWatermark text="CAREERS" align="right" />
         <div className="relative z-10 mx-auto max-w-[1280px] py-16 md:py-24">
           <EyebrowLabel>Open roles</EyebrowLabel>
           <h1 className="mt-6 max-w-3xl">Find your next role.</h1>
@@ -143,7 +142,7 @@ function JobCard({ job }: { job: Job }) {
         <div>
           <EyebrowLabel>{job.department}</EyebrowLabel>
           <h3 className="mt-3 text-[24px] font-medium tracking-tight-2">{job.title}</h3>
-          <p className="mt-2 text-[14px] text-slate">📍 {job.location}</p>
+          <p className="mt-2 flex items-center text-[14px] text-slate"><MapPin className="h-4 w-4 mr-1 inline" /> {job.location}</p>
         </div>
       </div>
 
@@ -160,13 +159,13 @@ function JobCard({ job }: { job: Job }) {
       </div>
 
       <div className="flex items-center justify-between gap-4 pt-2">
-        <div className="text-[14px] text-slate">
-          {job.deadline ? <>⌛ Closes {job.deadline}</> : <>⌛ Open</>}
+        <div className="flex items-center text-[14px] text-slate">
+          {job.deadline ? <><Clock className="h-4 w-4 mr-1 inline" /> Closes {job.deadline}</> : <><Clock className="h-4 w-4 mr-1 inline" /> Open</>}
           <span className="mx-2 text-ink/30">·</span>
           {timeAgo(job.created_at)}
         </div>
         <Link href={`/jobs/${job.slug}`}>
-          <Button variant="primary" size="sm" rightIcon={<span>→</span>}>
+          <Button variant="primary" size="sm" rightIcon={<ArrowRight className="h-4 w-4" />}>
             Apply Now
           </Button>
         </Link>
