@@ -2,32 +2,52 @@ services:
   backend:
     build: ./backend
     container_name: Selektr-backend
-    env_file: ./backend/.env
+
+    env_file:
+      - ./backend/.env
+
     environment:
       DATABASE_URL: sqlite:////app/data/Selektr.db
+
     volumes:
       - Selektr_data:/app/data
-    expose:
-      - "8000"
+
+    ports:
+      - "127.0.0.1:8010:8000"
+
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health').status == 200 else 1)\""]
+      test:
+        [
+          "CMD-SHELL",
+          "python -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health').status == 200 else 1)\""
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
+
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./frontend
       args:
         NEXT_PUBLIC_API_BASE: /api
+
     container_name: Selektr-frontend
+
     environment:
       NEXT_PUBLIC_API_BASE: /api
-    expose:
-      - "3000"
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+
+    ports:
+      - "127.0.0.1:3010:3000"
+
     depends_on:
       backend:
         condition: service_healthy
+
+    restart: unless-stopped
 
 volumes:
   Selektr_data:
