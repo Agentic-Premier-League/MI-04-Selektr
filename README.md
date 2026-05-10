@@ -1,247 +1,99 @@
-# Code of Conduct
+# HireIQ
 
-# Agentic Premier League 2026 🚀
+AI hiring platform: recruiters post jobs, applicants apply with a resume + AI-generated interview questions, candidates are screened and ranked by AI.
 
-### Powered by Antigravity
-
-Welcome to the official Agentic Premier League 2026 Hackathon.
-
-The Agentic Premier League is committed to building a collaborative, inclusive, innovative, and respectful environment for all participants across the GitHub Organization and team repositories.
-
-This Code of Conduct applies to:
-
-* Participants
-* Team Leads
-* Mentors
-* Organizers
-* Judges
-* Volunteers
-* Sponsors
-* Community Members
-
-By participating in this hackathon and contributing to any repository under the organization, you agree to follow these guidelines.
+- **Frontend:** Next.js (App Router) + TypeScript + Tailwind, Mastercard-inspired design
+- **Backend:** FastAPI + SQLAlchemy + SQLite
+- **AI:** Google Gemini 2.5 Flash (`google-generativeai`)
+- **Docs:** [`DESIGN.md`](./DESIGN.md), [`hireiq-description.md`](./hireiq-description.md)
 
 ---
 
-# Our Mission
-
-We aim to:
-
-* Encourage innovation and experimentation
-* Promote open-source collaboration
-* Build impactful and responsible AI systems
-* Create a positive developer community
-* Help participants learn real-world engineering workflows
-* Foster teamwork, creativity, and ethical development
-
----
-
-# Expected Behavior
-
-All participants are expected to:
-
-✅ Be respectful and professional
-✅ Collaborate positively with teammates and mentors
-✅ Encourage learning and knowledge sharing
-✅ Provide constructive feedback
-✅ Respect diverse opinions and backgrounds
-✅ Follow repository contribution workflows
-✅ Maintain professionalism during demos, discussions, and reviews
-✅ Build responsibly using ethical AI practices
-✅ Keep repositories clean, organized, and properly documented
-
----
-
-# Repository & GitHub Standards
-
-Each team repository must maintain:
-
-* A proper `README.md`
-* Setup and installation instructions
-* Project architecture overview
-* Team member details
-* Screenshots or demo assets
-* Clean and meaningful commit history
-
----
-
-# Branching & Contribution Rules
-
-Teams are expected to follow proper GitHub workflows.
-
-## Recommended Workflow
+## Run with Docker (recommended)
 
 ```bash
-main
-  ↓
-feature branch
-  ↓
-pull request
-  ↓
-review
-  ↓
-merge
+cp backend/.env.example backend/.env
+# edit backend/.env and fill in GEMINI_API_KEY (and optionally change RECRUITER_PASSWORD)
+
+docker compose up --build
+```
+
+Then open:
+
+- Frontend: http://localhost:3000
+- Backend API docs: http://localhost:8000/docs
+- SQLite DB lives in the `hireiq_data` Docker volume — survives restarts.
+
+To wipe data:
+
+```bash
+docker compose down -v
 ```
 
 ---
 
-## Branch Naming Convention
+## Run locally (no Docker)
 
-Use descriptive branch names:
-
-```bash
-feature-auth-system
-feature-ai-agent
-fix-dashboard-ui
-docs-project-readme
-```
-
----
-
-## Commit Naming Convention
-
-Use meaningful commit messages:
+### Backend
 
 ```bash
-feat: added AI career assistant
-fix: resolved authentication bug
-ui: improved dashboard responsiveness
-docs: updated setup guide
-ai: integrated Gemini API
-refactor: optimized API structure
+cd backend
+python -m venv .venv
+source .venv/bin/activate            # on Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env                 # fill in GEMINI_API_KEY
+uvicorn app.main:app --reload --port 8000
 ```
 
----
+### Frontend
 
-# Pull Request Guidelines
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Before creating a Pull Request:
-
-✅ Ensure the project runs correctly
-✅ Update documentation if required
-✅ Remove unnecessary files and logs
-✅ Verify no secrets/API keys are committed
-✅ Ensure commit history is clean and meaningful
+Frontend dev server proxies `/api/*` to `http://localhost:8000/api/*` (see `next.config.ts`).
 
 ---
 
-# Security & API Key Policy
+## Recruiter access
 
-Participants must NEVER commit:
-
-❌ `.env` files
-❌ API keys
-❌ Database credentials
-❌ Access tokens
-❌ Private certificates
-
-Instead:
-
-✅ Use `.env.example` files
-✅ Store secrets securely
-✅ Rotate exposed keys immediately if leaked
+Recruiter pages (`/recruiter/*`) are gated by a single shared password. Default is `hireme` — set `RECRUITER_PASSWORD` in `backend/.env` to change it.
 
 ---
 
-# Unacceptable Behavior
+## End-to-end golden path
 
-The following behaviors will NOT be tolerated:
-
-❌ Harassment or discrimination
-❌ Hate speech or offensive content
-❌ Bullying or personal attacks
-❌ Plagiarism without attribution
-❌ Spamming repositories or discussions
-❌ Uploading malicious or harmful code
-❌ Intentionally sabotaging another team’s work
-❌ Unauthorized access attempts
-❌ Creating unethical or unsafe AI systems
-❌ Sharing illegal, harmful, or abusive content
+1. Open http://localhost:3000/recruiter and enter the password.
+2. Click **+ Post a Job** — fill in title, department, description, required skills, mark as Public.
+3. Open http://localhost:3000/jobs in an incognito tab — your job appears.
+4. Click **Apply Now** → fill out the form → either upload a PDF resume or paste 200+ chars of resume text → submit.
+5. ~3–8 second loading screen → 5 AI-generated questions appear → answer all five → submit.
+6. Land on the confirmation page.
+7. Back in `/recruiter/jobs/<id>` → the candidate appears with overall + sub-scores, status, AI summary, optional red flags.
+8. Open the candidate profile → click **Draft Invite** → see a generated email; change status to **Shortlisted**.
 
 ---
 
-# AI & Open Source Ethics
+## Architecture notes
 
-Participants must ensure:
+```
+frontend/
+├── app/
+│   ├── jobs/                       public job board + detail
+│   ├── apply/[slug]/               two-step application
+│   └── recruiter/                  password-gated dashboard, create, pipeline, candidate
+├── components/{ui,nav,charts}/     reusable primitives
+└── lib/                            api client, types, auth helpers
 
-* Responsible use of AI tools and APIs
-* Proper attribution for open-source libraries and assets
-* Respect for intellectual property
-* No misuse of private or sensitive data
-* Compliance with API/platform terms of service
-* Transparent AI workflows where applicable
+backend/
+├── app/
+│   ├── routers/                    jobs, apply, candidates, email, analytics
+│   ├── gemini.py                   5 prompt fns: screen / generate Qs / score / draft email
+│   ├── pdf.py                      pdfplumber-based resume PDF text extraction
+│   └── ...
+└── data/hireiq.db                  SQLite database (volume-mounted in Docker)
+```
 
----
-
-# Collaboration Rules
-
-Teams may:
-
-✅ Learn from tutorials, frameworks, and public resources
-✅ Use open-source tools with attribution
-✅ Discuss ideas with mentors and other participants
-
-Teams may NOT:
-
-❌ Copy full projects without meaningful contribution
-❌ Re-upload another team’s work
-❌ Misrepresent AI-generated work as fully original
-
----
-
-# Repository Hygiene
-
-To maintain clean repositories:
-
-❌ Do not upload `node_modules/`
-❌ Do not upload large datasets or unnecessary binaries
-❌ Do not commit build folders unless required
-❌ Do not spam commits with meaningless messages
-
-Recommended:
-
-✅ Use `.gitignore` properly
-✅ Keep repositories lightweight and organized
-✅ Upload large videos/assets externally if needed
-
----
-
-# Fair Play Policy
-
-The spirit of this hackathon is:
-
-* Learning
-* Innovation
-* Collaboration
-* Community Building
-
-Winning matters, but responsible development, teamwork, and creativity matter more.
-
----
-
-# Reporting Issues
-
-If you experience or witness behavior violating this Code of Conduct, contact the organizers immediately.
-
-Organizers reserve the right to:
-
-* Issue warnings
-* Remove content
-* Restrict repository access
-* Disqualify teams
-* Remove participants from the event if necessary
-
----
-
-# Final Note
-
-Build products that solve meaningful problems.
-Support your teammates.
-Respect the community.
-Create responsibly.
-
-Let’s build the future of Agentic AI together 🚀
-
----
-
-### Organized with ❤️ by GDG Nagpur
+The five Claude/Gemini calls in spec section 6 are all wired to Gemini 2.5 Flash with JSON-mode output and a degraded-fallback path so the app never hard-fails when the model is unreachable or returns malformed JSON.
