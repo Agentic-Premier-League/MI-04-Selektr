@@ -1,0 +1,1 @@
+# This file ensures the public directory is preserved by git and copied correctly by Docker.
