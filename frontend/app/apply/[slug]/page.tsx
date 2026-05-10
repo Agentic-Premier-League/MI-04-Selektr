@@ -35,15 +35,407 @@ interface Profile {
 }
 
 const EMPTY_PROFILE: Profile = {
-  full_name: "",
-  email: "",
-  phone: "",
-  linkedin_url: "",
-  portfolio_url: "",
+  full_name: "Vivian Demello",
+  email: "vynride@gmail.com",
+  phone: "+91123456789",
+  linkedin_url: "linkedin.com/in/viviandemello",
+  portfolio_url: "github.com/vynride",
   years_experience: "",
-  current_role: "",
+  current_role: "Software Engineer at Google",
   education: "",
-  resume_text: "",
+  resume_text: `1. React Performance Strategy for Large, Frequently Updated Datasets
+
+For a React application handling large and frequently changing datasets, I focus on solving two separate problems:
+1. Fast initial render/load
+2. Efficient incremental updates without unnecessary re-renders
+
+For fast initial load time:
+- I would implement route-level and component-level code splitting using React.lazy and dynamic imports so users only download what is immediately necessary.
+- I would aggressively reduce bundle size:
+  - Tree shaking
+  - Avoiding heavy dependencies
+  - Using lighter alternatives where possible
+  - Splitting vendor bundles
+- I would use server-side pagination or cursor-based fetching instead of loading entire datasets upfront.
+- For tabular or infinite-scroll interfaces, I would use virtualization libraries like react-window or react-virtualized so only visible rows are rendered.
+- I would cache API responses using React Query / TanStack Query or SWR to avoid redundant requests and improve perceived performance.
+- I would optimize static assets and API payloads:
+  - Compression (gzip/brotli)
+  - Lazy image loading
+  - Compact JSON responses
+  - Selective field fetching
+
+For smooth responsive updates:
+- I would normalize state and avoid deeply nested state structures to minimize expensive reconciliation.
+- I would isolate frequently changing components from stable UI components to reduce cascading re-renders.
+- I would heavily use:
+  - memo
+  - useMemo
+  - useCallback
+  - selector-based state access
+- For high-frequency updates, I would batch or debounce updates instead of re-rendering on every event.
+- I would use WebSockets or Server-Sent Events for incremental updates instead of polling.
+- For extremely large datasets, I would implement delta updates where only changed records are transmitted.
+- If computations are expensive, I would move processing to:
+  - Web Workers
+  - Backend aggregation services
+  - Cached derived state
+
+For monitoring:
+- I rely on Lighthouse, React Profiler, Chrome Performance tools, and production telemetry to identify render bottlenecks.
+- I usually measure:
+  - Largest Contentful Paint (LCP)
+  - Time to Interactive (TTI)
+  - Re-render frequency
+  - Component mount times
+  - Memory usage growth over time
+
+One important lesson I’ve learned is that React performance problems are often architecture problems rather than rendering problems. Preventing unnecessary data movement and reducing UI churn usually matters more than micro-optimizing components.
+
+2. Significant Technical Challenge in AI/ML or Microservices Work
+
+One significant challenge I faced was in an AI document-processing pipeline involving RAG indexing and multiple Python microservices.
+
+The original design used synchronous processing:
+- User uploads document
+- Backend extracts text
+- Embeddings generated immediately
+- Vector DB updated
+- Metadata persisted
+- Response returned after completion
+
+This worked for small files during testing, but failed badly under realistic load:
+- Large PDFs caused request timeouts
+- Memory usage spiked during OCR and embedding generation
+- Concurrent uploads overwhelmed workers
+- API latency became unpredictable
+
+The initial assumption was that adding more worker instances would solve the issue, but scaling horizontally only increased contention on shared resources and database connections.
+
+How I diagnosed the problem:
+- Added detailed request tracing and timing instrumentation
+- Used Prometheus + Grafana to inspect:
+  - Request latency
+  - Memory growth
+  - Queue saturation
+  - CPU spikes
+- Profiled memory usage in Python workers
+- Identified that embedding generation and PDF parsing were blocking operations consuming excessive memory
+- Found that long-running synchronous requests were tying up API workers
+
+Steps I took to solve it:
+1. Decoupled processing from request lifecycle
+   - Upload API became asynchronous
+   - Returned job ID immediately
+
+2. Introduced a queue-based architecture
+   - FastAPI handled ingestion
+   - Celery/RQ workers processed documents asynchronously
+
+3. Split pipeline into stages
+   - Extraction
+   - Chunking
+   - Embedding
+   - Indexing
+   - Metadata persistence
+
+4. Added retry logic and dead-letter handling
+   - Prevented pipeline crashes from corrupt documents
+
+5. Reduced memory pressure
+   - Streaming file reads
+   - Chunked processing
+   - Better cleanup of temporary objects
+
+6. Improved observability
+   - Distributed tracing
+   - Structured logging
+   - Queue metrics
+   - Worker health dashboards
+
+Results:
+- Request latency dropped significantly
+- API remained responsive during heavy uploads
+- Worker crashes decreased
+- System became horizontally scalable
+
+What I learned:
+- Synchronous architectures break quickly for AI workloads involving large files or heavy compute.
+- Observability is critical. Without metrics and tracing, debugging distributed systems becomes guesswork.
+- Scaling inefficient architecture usually amplifies problems instead of solving them.
+- Designing for backpressure and failure handling early is extremely important in ML systems.
+
+3. Designing a Document Upload + Processing + Real-Time Feedback System
+
+High-level architecture:
+
+React Frontend
+        |
+FastAPI Gateway/API
+        |
+PostgreSQL + Redis
+        |
+Async Workers (Celery/RQ)
+        |
+Vector DB / Embedding Pipeline
+
+API Design (FastAPI)
+
+1. Upload Endpoint
+POST /documents/upload
+
+Purpose:
+- Accept document upload
+- Store metadata in PostgreSQL
+- Store file in object storage/local storage
+- Create processing job
+- Return document ID + job ID immediately
+
+Response:
+{
+  "document_id": "...",
+  "job_id": "...",
+  "status": "queued"
+}
+
+2. Get Processing Status
+GET /documents/{document_id}/status
+
+Response:
+{
+  "status": "processing",
+  "progress": 65,
+  "stage": "embedding_generation",
+  "updated_at": "..."
+}
+
+3. Get Final Results
+GET /documents/{document_id}/results
+
+Response:
+{
+  "chunks_indexed": 142,
+  "summary": "...",
+  "embedding_status": "complete"
+}
+
+4. WebSocket Endpoint
+/ws/documents/{document_id}
+
+Purpose:
+- Push live updates to frontend
+- Avoid aggressive polling
+
+Data Flow
+
+Upload Flow:
+1. React uploads file using multipart/form-data
+2. FastAPI:
+   - validates file
+   - stores metadata in PostgreSQL
+   - creates queued job
+   - returns immediately
+3. Background worker consumes job
+4. Worker:
+   - extracts text
+   - chunks document
+   - generates embeddings
+   - updates vector DB
+   - updates PostgreSQL status
+5. WebSocket emits progress updates
+6. Frontend reflects real-time progress
+
+Database Design (PostgreSQL)
+
+documents table:
+- id
+- filename
+- upload_time
+- status
+- user_id
+- storage_path
+
+processing_jobs table:
+- job_id
+- document_id
+- stage
+- progress_percent
+- started_at
+- completed_at
+- error_message
+
+document_chunks table:
+- chunk_id
+- document_id
+- chunk_text
+- embedding_reference
+
+Frontend Strategy (React)
+
+For efficient updates:
+- Use React Query/TanStack Query for caching and synchronization
+- Use WebSockets for live progress updates
+- Optimistically update UI states
+- Virtualize large result lists if rendering many chunks
+
+UI states:
+- Uploading
+- Queued
+- Processing
+- Indexing
+- Completed
+- Failed
+
+Performance considerations:
+- Avoid polling every second for thousands of clients
+- Push updates through WebSockets/SSE
+- Batch progress events where possible
+- Keep payloads minimal
+
+Reliability considerations:
+- Idempotent job processing
+- Retry mechanisms
+- Dead-letter queues
+- File validation
+- Rate limiting
+- Authentication + authorization
+- Structured logging and tracing
+
+Scalability:
+- Stateless FastAPI services behind load balancer
+- Dedicated worker pool for embedding generation
+- Redis for queues/caching
+- Separate vector database if scaling RAG heavily
+
+4. Academic Status, Availability, and Motivation
+
+I am currently pursuing my undergraduate degree in Computer Science & Engineering, with an expected graduation year of 2028.
+
+Alongside academics, I’ve been heavily focused on practical engineering work, particularly in:
+- AI/ML systems
+- Backend engineering
+- React applications
+- DevOps and observability
+- Distributed systems and microservices
+
+Most of my learning has been project-driven, where I intentionally worked on production-style problems rather than only academic exercises. That helped me gain hands-on experience with technologies like FastAPI, React, PostgreSQL, Docker, Prometheus, Grafana, and RAG pipelines much earlier in my academic journey.
+
+Regarding availability:
+- I am currently available for internships, contract work, and part-time engineering opportunities.
+- For a full-time role, my availability would depend on role flexibility and alignment with my academic commitments, though I’m actively looking for opportunities where I can contribute meaningfully while continuing my degree.
+
+What motivated me to apply:
+I applied because I’m specifically looking for environments where I can work on real engineering problems at scale, collaborate with experienced engineers, and accelerate my growth through practical impact.
+
+I’m particularly interested in software engineering roles because I enjoy building systems end-to-end:
+- designing APIs
+- optimizing performance
+- debugging distributed systems
+- improving developer tooling
+- building reliable user-facing products
+
+Even though I’m still an undergraduate, I believe the depth of hands-on experience I’ve built through projects allows me to contribute effectively in production engineering environments.
+
+5. Handling High Latency and Timeouts in Production
+
+My approach would be systematic and evidence-driven rather than immediately jumping to assumptions.
+
+Step 1 — Define the scope of the problem
+First I would identify:
+- Is the issue affecting all users or a subset?
+- Did latency increase gradually or suddenly?
+- Is the issue isolated to one service, endpoint, region, or dependency?
+- Was there a recent deployment, schema change, traffic spike, or infrastructure change?
+
+Step 2 — Check high-level monitoring dashboards
+Using Prometheus + Grafana, I would inspect:
+- Request latency percentiles (P50/P95/P99)
+- Error rates
+- Timeout frequency
+- CPU and memory utilization
+- Container restarts
+- Queue depth
+- Database connection saturation
+- Network throughput
+
+I would correlate timestamps to identify what changed around the incident window.
+
+Step 3 — Identify bottleneck location
+I would narrow down whether the latency originates from:
+- Application code
+- Database
+- External APIs
+- Cache layer
+- Message queues
+- Network issues
+- Resource exhaustion
+
+Step 4 — Analyze logs and traces
+I would inspect:
+- Structured logs
+- Slow query logs
+- Exception traces
+- Retry storms
+- Timeout patterns
+
+If distributed tracing exists, I’d use it to find where requests spend most of their time.
+
+Step 5 — Common failure patterns I would check
+
+Database issues:
+- Missing indexes
+- Lock contention
+- N+1 queries
+- Long-running transactions
+
+Application issues:
+- Memory leaks
+- Blocking I/O
+- Thread starvation
+- Excessive serialization/deserialization
+- Unbounded concurrency
+
+Infrastructure issues:
+- CPU throttling
+- OOM kills
+- Container autoscaling failures
+- Network instability
+
+Traffic-related issues:
+- Sudden traffic spikes
+- Hot partitions
+- Cache stampedes
+
+Step 6 — Immediate mitigation actions
+
+Depending on findings, immediate mitigations could include:
+- Rolling back recent deployment
+- Increasing replicas temporarily
+- Enabling rate limiting
+- Reducing expensive operations
+- Scaling DB read replicas
+- Increasing cache TTLs
+- Disabling non-critical features
+- Restarting unhealthy workers
+- Applying circuit breakers/timeouts
+
+The priority is restoring service stability before pursuing deep optimization.
+
+Step 7 — Root cause analysis and prevention
+
+After stabilization:
+- Reproduce issue in staging if possible
+- Add missing observability
+- Write postmortem
+- Add alerts for early detection
+- Improve load testing coverage
+- Introduce safeguards:
+  - backpressure
+  - retries with jitter
+  - bulkheads
+  - autoscaling policies
+
+One thing I’ve learned is that production incidents are often multi-factor problems. The biggest mistake is treating symptoms instead of identifying the actual system bottleneck or feedback loop causing the degradation.`,
   pdf: null,
   consent_own_work: false,
   consent_privacy: false,

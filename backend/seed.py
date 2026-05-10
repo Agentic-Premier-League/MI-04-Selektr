@@ -13,48 +13,48 @@ def seed():
     Base.metadata.create_all(engine)
     session = SessionLocal()
     
-    # Check if we already seeded
-    if session.query(Job).first():
-        session.close()
-        return
+    # Clear existing data so it seeds again on every run
+    session.query(Candidate).delete()
+    session.query(Job).delete()
+    session.commit()
 
 
     job_roles = [
         {
-            "title": "Software Engineer",
+            "title": "Senior Backend Engineer",
             "department": "Engineering",
             "location": "Remote",
             "employment_type": "Full-time",
-            "experience_level": "Mid-Level",
-            "description": "We are looking for a skilled Software Engineer with Python and React experience.",
-            "required_skills": ["Python", "React", "SQL"]
+            "experience_level": "Senior",
+            "description": "We are seeking a deeply technical Senior Backend Engineer to architect and scale our microservices. You will be responsible for designing high-throughput, low-latency APIs, managing asynchronous message queues, and ensuring data consistency across distributed databases. The ideal candidate has strong expertise in Python, FastAPI, PostgreSQL, and Redis, with a proven track record of solving complex performance bottlenecks in production systems.",
+            "required_skills": ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "System Design"]
         },
         {
-            "title": "Product Manager",
+            "title": "Lead Product Manager",
             "department": "Product",
             "location": "New York, NY",
             "employment_type": "Full-time",
-            "experience_level": "Senior",
-            "description": "Seeking an experienced Product Manager to lead our core platform team and drive product strategy.",
-            "required_skills": ["Agile", "Product Strategy", "User Research", "Data Analytics"]
+            "experience_level": "Director",
+            "description": "We are looking for a Lead Product Manager to define the vision and roadmap for our core enterprise platform. You will work closely with engineering, design, and sales to identify market opportunities, prioritize features, and drive cross-functional execution. This role requires exceptional analytical skills, a deep understanding of B2B SaaS business models, and the ability to turn qualitative user feedback into measurable product improvements.",
+            "required_skills": ["Agile", "Product Strategy", "User Research", "Data Analytics", "B2B SaaS"]
         },
         {
-            "title": "Data Scientist",
+            "title": "Machine Learning Engineer",
             "department": "Data",
             "location": "Remote",
             "employment_type": "Full-time",
-            "experience_level": "Entry-Level",
-            "description": "Join our data team to build predictive models and uncover insights from large datasets.",
-            "required_skills": ["Python", "Machine Learning", "Pandas", "Scikit-Learn"]
+            "experience_level": "Mid-Level",
+            "description": "Join our AI innovation lab as a Machine Learning Engineer to build cutting-edge natural language processing and computer vision models. You will be responsible for the end-to-end ML lifecycle: from data collection and cleaning, to model training, evaluation, and deployment using MLOps best practices. Experience with PyTorch or TensorFlow, as well as embedding models and vector databases, is highly desired.",
+            "required_skills": ["Python", "PyTorch", "NLP", "Vector Databases", "MLOps"]
         },
         {
-            "title": "UX/UI Designer",
+            "title": "Senior UX/UI Designer",
             "department": "Design",
             "location": "San Francisco, CA",
-            "employment_type": "Contract",
-            "experience_level": "Mid-Level",
-            "description": "Looking for a creative UX/UI designer to revamp our user interfaces and create engaging user experiences.",
-            "required_skills": ["Figma", "Prototyping", "User Testing", "CSS"]
+            "employment_type": "Full-time",
+            "experience_level": "Senior",
+            "description": "We are hiring a Senior UX/UI Designer to lead the redesign of our flagship mobile and web applications. You will create wireframes, interactive prototypes, and high-fidelity mockups that deliver intuitive and aesthetically stunning user experiences. Strong proficiency in Figma, a deep understanding of human-computer interaction principles, and experience building robust design systems are essential for this role.",
+            "required_skills": ["Figma", "Prototyping", "Design Systems", "User Testing", "CSS"]
         }
     ]
 
@@ -100,12 +100,12 @@ def seed():
                 years_experience=str(random.randint(1, 15)),
                 current_role=f"Senior {random.choice(roles_current)}",
                 education="B.S. Relevant Degree",
-                resume_text=f"Resume for {name}. Experienced in {', '.join(role['required_skills'][:2])}. Working in the industry for {random.randint(1, 15)} years.",
-                overall_score=random.randint(40, 98),
-                skills_match=random.randint(40, 98),
-                experience_relevance=random.randint(40, 98),
-                education_fit=random.randint(40, 98),
-                ai_summary=f"{name} appears to be a good match for the {job.title} role with relevant skills.",
+                resume_text=f"Professional Summary:\nDedicated and results-oriented professional with {random.randint(4, 15)} years of experience in the tech industry. Proven track record of delivering high-quality solutions and driving business growth.\n\nExperience:\n- Senior {random.choice(roles_current)} at TechCorp (2018-Present): Led cross-functional teams to deploy scalable systems, utilizing {', '.join(role['required_skills'][:3])}. Increased system efficiency by 40%.\n- {random.choice(roles_current)} at Innovate LLC (2014-2018): Developed core features and maintained legacy systems. Collaborated closely with stakeholders to define requirements.\n\nEducation:\n- B.S. in Computer Science or related field.\n\nSkills:\nHighly proficient in {', '.join(role['required_skills'])}. Additional skills include leadership, agile methodologies, and effective communication.",
+                overall_score=random.randint(60, 98),
+                skills_match=random.randint(60, 98),
+                experience_relevance=random.randint(60, 98),
+                education_fit=random.randint(60, 98),
+                ai_summary=f"{name} is a highly competitive candidate for the {job.title} role. Their background strongly aligns with the core requirements, particularly their deep expertise in {role['required_skills'][0]} and {role['required_skills'][1]}. They have a proven history of scaling systems and collaborating across teams, making them a low-risk, high-reward hire.",
                 status=random.choice(["new", "interviewing", "rejected", "hired"]),
                 skills_detected=role["required_skills"] if random.random() > 0.4 else role["required_skills"][:2]
             )

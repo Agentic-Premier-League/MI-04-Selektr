@@ -119,9 +119,11 @@ export default function PublicJobBoardPage() {
           )}
 
           {!error && visible.length > 0 && (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {visible.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <Link href={`/jobs/${job.slug}`} key={job.id} className="block outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-card">
+                  <JobCard job={job} />
+                </Link>
               ))}
             </div>
           )}
@@ -137,11 +139,11 @@ function JobCard({ job }: { job: Job }) {
       ? `${job.currency ?? "₹"}${formatNumber(job.salary_min)} – ${job.currency ?? "₹"}${formatNumber(job.salary_max)}`
       : null;
   return (
-    <article className="relative flex flex-col gap-4 rounded-card bg-lifted p-8 shadow-card">
+    <article className="relative flex flex-col gap-4 rounded-card bg-lifted p-8 shadow-sm border border-ink/5 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-ink/20 group">
       <div className="flex items-start justify-between gap-4">
         <div>
           <EyebrowLabel>{job.department}</EyebrowLabel>
-          <h3 className="mt-3 text-[24px] font-medium tracking-tight-2">{job.title}</h3>
+          <h3 className="mt-3 text-[24px] font-medium tracking-tight-2 group-hover:text-primary transition-colors duration-200">{job.title}</h3>
           <p className="mt-2 flex items-center text-[14px] text-slate"><MapPin className="h-4 w-4 mr-1 inline" /> {job.location}</p>
         </div>
       </div>
@@ -158,17 +160,17 @@ function JobCard({ job }: { job: Job }) {
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-4 pt-2">
+        <div className="flex items-center justify-between gap-4 pt-2">
         <div className="flex items-center text-[14px] text-slate">
           {job.deadline ? <><Clock className="h-4 w-4 mr-1 inline" /> Closes {job.deadline}</> : <><Clock className="h-4 w-4 mr-1 inline" /> Open</>}
           <span className="mx-2 text-ink/30">·</span>
           {timeAgo(job.created_at)}
         </div>
-        <Link href={`/jobs/${job.slug}`}>
-          <Button variant="primary" size="sm" rightIcon={<ArrowRight className="h-4 w-4" />}>
+        <div>
+          <Button variant="primary" size="sm" rightIcon={<ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />}>
             Apply Now
           </Button>
-        </Link>
+        </div>
       </div>
     </article>
   );

@@ -9,6 +9,8 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
+from datetime import datetime
 from typing import Any
 
 import google.generativeai as genai
@@ -57,6 +59,8 @@ def _generate_json(prompt: str) -> dict[str, Any] | list[Any] | None:
 
 SCREEN_PROMPT = """You are an expert technical recruiter scoring a candidate's resume against a job posting.
 
+CURRENT DATE AND TIME: {current_datetime}
+
 JOB POSTING
 Title: {title}
 Department: {department}
@@ -66,7 +70,6 @@ Required skills: {required_skills}
 Nice-to-have skills: {nice_to_have_skills}
 
 CANDIDATE PROFILE
-Full name: {full_name}
 Years of experience: {years_experience}
 Current/last role: {current_role}
 Education: {education}
@@ -99,20 +102,33 @@ If you find no red flags, return an empty list.
 
 
 def screen_resume(job: Any, profile: dict[str, Any], resume_text: str) -> dict[str, Any]:
+    resume_text_safe = resume_text[:12000]
+    
+    # Filter out known PII
+    for pii_key in ["full_name", "email", "phone"]:
+        val = profile.get(pii_key)
+        if val and isinstance(val, str) and len(val.strip()) > 3:
+            # Escape regex chars and replace case-insensitively
+            pattern = re.compile(re.escape(val.strip()), re.IGNORECASE)
+            resume_text_safe = pattern.sub("[REDACTED]", resume_text_safe)
+            
+    # Also blindly filter out any email patterns
+    resume_text_safe = re.sub(r'[\w\.-]+@[\w\.-]+\.\w+', '[REDACTED]', resume_text_safe)
+
     prompt = SCREEN_PROMPT.format(
+        current_datetime=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         title=job.title,
         department=job.department,
         experience_level=job.experience_level,
         description=job.description,
         required_skills=", ".join(job.required_skills or []) or "(none specified)",
         nice_to_have_skills=", ".join(job.nice_to_have_skills or []) or "(none)",
-        full_name=profile.get("full_name", ""),
         years_experience=profile.get("years_experience") or "(not specified)",
         current_role=profile.get("current_role") or "(not specified)",
         education=profile.get("education") or "(not specified)",
         linkedin_url=profile.get("linkedin_url") or "(none)",
         portfolio_url=profile.get("portfolio_url") or "(none)",
-        resume_text=resume_text[:12000],
+        resume_text=resume_text_safe,
     )
     result = _generate_json(prompt)
     if not isinstance(result, dict):
