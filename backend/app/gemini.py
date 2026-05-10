@@ -289,7 +289,7 @@ EMAIL_PROMPT = """Draft a recruiter email to a candidate. Tone must match the em
 EMAIL TYPE: {email_type}
 - invite: warm, enthusiastic, concrete next step (schedule a longer interview).
 - waitlist: kind, honest, leaves the door open without false promises.
-- reject: respectful, brief, encourages the candidate, no fake reasons.
+- reject: respectful, encouraging. YOU MUST INCLUDE specific, constructive feedback derived directly from the AI summary. Explain exactly why they were rejected and where they fell short, so they can improve.
 
 CANDIDATE
 Name: {full_name}
