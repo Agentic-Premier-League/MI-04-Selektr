@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
 import { GhostWatermark } from "@/components/ui/GhostWatermark";
@@ -12,7 +11,6 @@ import { PillToggleGroup } from "@/components/ui/PillToggleGroup";
 import { FloatingNavPill } from "@/components/nav/FloatingNavPill";
 import { fetchPublicJobs } from "@/lib/api";
 import type { Job } from "@/lib/types";
-import { cn } from "@/lib/cn";
 
 const FILTERS = [
   "All",
