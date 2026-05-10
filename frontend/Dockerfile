@@ -9,6 +9,7 @@ COPY tsconfig.json next.config.mjs tailwind.config.ts postcss.config.js next-env
 COPY app ./app
 COPY components ./components
 COPY lib ./lib
+COPY public ./public
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
