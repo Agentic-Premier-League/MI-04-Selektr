@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 
-COPY tsconfig.json next.config.ts tailwind.config.ts postcss.config.js next-env.d.ts ./
+COPY tsconfig.json next.config.mjs tailwind.config.ts postcss.config.js next-env.d.ts ./
 COPY app ./app
 COPY components ./components
 COPY lib ./lib
